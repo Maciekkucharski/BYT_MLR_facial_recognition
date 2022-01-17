@@ -1,5 +1,6 @@
 from os.path import join, dirname, abspath
 import matplotlib.pyplot as plt
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
@@ -8,15 +9,14 @@ import nn
 MODEL_FILENAME = "model"
 NN_TYPE = "MaciekNet"
 EPOCHS = 20
-CLASSES = 10
+CLASSES = 7
 BATCH_SIZE = 128
 DIMENSIONS = (48, 48)
 OPTIMIZER = 'adam'
 LOSS = 'categorical_crossentropy'
 IMAGE_DIMENSIONS = (48, 48, 1)
-POSSIBLE_PREDICTIONS = 7
-RANDOM_SEED = 20153
 DATASET_PATH = join(dirname(abspath(__file__)), "images")
+
 
 train_data_generator = ImageDataGenerator()
 validation_data_generator = ImageDataGenerator()
@@ -35,7 +35,7 @@ validation_dataset = validation_data_generator.flow_from_directory(join(DATASET_
                                                                    shuffle=False
                                                                    )
 
-model = nn.MaciekNet.build(IMAGE_DIMENSIONS, POSSIBLE_PREDICTIONS, OPTIMIZER, LOSS)
+model = nn.MaciekNet.build(IMAGE_DIMENSIONS, CLASSES, OPTIMIZER, LOSS)
 earlyStopping = EarlyStopping(monitor='val_loss', patience=3, verbose=1, mode='min', restore_best_weights=True)
 ckpt = ModelCheckpoint('model.h5', save_best_only=True, monitor='val_loss', mode='min')
 reduce_lr_loss = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=3, verbose=1)
